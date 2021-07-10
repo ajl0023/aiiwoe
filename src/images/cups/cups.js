@@ -19,7 +19,8 @@ export const cups = [
   mocha,
   rist,
 ].map((cup) => {
-  const regex = /(?<=\/media\/)\w+/;
-  cup["name"] = cup.default.match(regex)[0];
+  const regex = /\/(\w+)\./;
+
+  cup["name"] = cup.default.match(regex)[1];
   return cup;
 });
