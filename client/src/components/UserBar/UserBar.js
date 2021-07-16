@@ -42,11 +42,6 @@ const UserBar = (props) => {
               src={cupObj[user.data].default}
               alt=""
             />
-            <img
-              className={classes.cup}
-              src={cupObj[user.data].default}
-              alt=""
-            />
           </React.Fragment>
         );
       })}
