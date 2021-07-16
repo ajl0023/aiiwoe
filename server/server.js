@@ -3,6 +3,8 @@ const express = require("express");
 const path = require("path");
 const app = express();
 var Ably = require("ably");
+app.use(express.static(path.join(__dirname, "../client/build")));
+
 const { group } = require("console");
 
 app.use(express.json());
@@ -74,6 +76,9 @@ function checkChannelInd() {
   channelsInd[id] = 0;
   return id;
 }
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
 app.post("/token", (req, res) => {
   let token;
   console.log(req.body.type);
@@ -89,6 +94,9 @@ app.post("/token/new", (req, res) => {
   id = Math.random().toString();
   channels[id] = 0;
   res.json({ token: id });
+});
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 require("./routes")(app);
 

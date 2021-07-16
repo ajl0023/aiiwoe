@@ -1,3 +1,3 @@
 git add .
-git commit -m "worked on responsive issues"
+git commit -m "server rendering"
 git push origin master
