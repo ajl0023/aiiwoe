@@ -39,6 +39,9 @@ const Group = (props) => {
         setUsers(usersCopy);
       });
     });
+    return () => {
+      channel.detach();
+    };
   }, []);
   const classes = useStyles();
 

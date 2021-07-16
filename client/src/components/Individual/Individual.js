@@ -33,6 +33,9 @@ const Individual = (props) => {
         setUsers(usersCopy);
       });
     });
+    return () => {
+      channel.detach();
+    };
   }, []);
   return (
     <>
