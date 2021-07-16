@@ -1,33 +1,81 @@
-import React from "react";
 import {
   Box,
   Button,
-  Container,
   FormControl,
-  Input,
   InputLabel,
   OutlinedInput,
   TextField,
+  useMediaQuery,
 } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import React, { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { generateId, clientId } from "../../ably";
+import { cupObj } from "../../images/cups/cups";
+import { getSocket } from "../../socketInstance";
+import styles from "./ChatBox.module.scss";
 
-import {
-  makeStyles,
-  ThemeProvider,
-  withStyles,
-} from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   chatBox: {
-    background: "white",
+    background: "rgba(255, 255, 255, 0.5)",
     height: "500px",
-    opacity: "50%",
+  },
+  cup: {
+    width: "40px",
+    height: "40px",
+    objectFit: "contain",
+  },
+  mainInput: {
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
+  },
+  sendButton: {
+    "&.MuiButton-contained.Mui-disabled": {
+      background: "rgba(255, 255, 255, 0.2)",
+    },
   },
 }));
-const ChatBox = () => {
+
+const ChatBox = (props) => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+
+  const channel = useMemo(() => {
+    return generateId();
+  });
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([]);
+
   const classes = useStyles();
+  const handleMsg = (e) => {
+    setInput(e.target.value);
+  };
+  const sendMsg = () => {
+    channel.publish("message sent", { text: input, ...props.currentUser });
+
+    setInput("");
+  };
+  useEffect(() => {
+    // getSocket.on("sendMessage", (msg) => {
+    //
+    // });
+
+    channel.subscribe(function (msg) {
+      console.log(msg);
+      setMessages((prev) => {
+        const copy = [...prev];
+        copy.push(msg);
+        return copy;
+      });
+    });
+  }, []);
 
   return (
     <div>
-      <Box height="100%" display="flex" justifyContent="space-between">
+      <Box
+        height="100%"
+        display="flex"
+        justifyContent={matches ? "space-between" : "center"}
+      >
         <Box
           className={classes.chatBox}
           width="500px"
@@ -35,24 +83,81 @@ const ChatBox = () => {
           height="100%"
         >
           <Box
-            position="absolute"
-            display="flex"
-            justifyContent="space-between"
-            bottom="0"
-            width="100%"
+            height="100%"
+            padding="5px 15px"
+            overflow="auto"
+            className={classes.messageContainer}
           >
-            <FormControl fullWidth>
-              <InputLabel htmlFor="outlined-adornment-amount">
-                Amount
+            {messages.map((msg, i) => {
+              return (
+                <Box
+                  key={i}
+                  gridGap="5px"
+                  alignItems="center"
+                  display="flex"
+                  flexDirection={
+                    msg.clientId === clientId ? "row" : "row-reverse"
+                  }
+                  justifyContent="start"
+                  className={
+                    msg.clientId === clientId
+                      ? classes.messageOut
+                      : classes.messageIn
+                  }
+                  padding="5px 15px"
+                >
+                  <img
+                    className={classes.cup}
+                    src={cupObj[msg.data.name].default}
+                    alt=""
+                  />
+                  <Box
+                    position="relative"
+                    padding="5px 15px"
+                    bgcolor={msg.clientId === clientId ? "white" : "#c06c48"}
+                  >
+                    <li>{msg.data.text}</li>
+                    <div
+                      className={
+                        styles[
+                          msg.clientId === clientId
+                            ? "arrow-right"
+                            : "arrow-left"
+                        ]
+                      }
+                    ></div>
+                  </Box>
+                </Box>
+              );
+            })}
+          </Box>
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <FormControl variant="filled" fullWidth>
+              <InputLabel
+                style={{ paddingLeft: "20px" }}
+                htmlFor="outlined-adornment-amount"
+              >
+                Type Here...
               </InputLabel>
-              <OutlinedInput
+              <TextField
+                className={classes.mainInput}
+                value={input}
+                variant="filled"
+                onChange={handleMsg}
                 labelWidth={60}
                 id="outlined-adornment-amount"
                 labelWidth={90}
               />
             </FormControl>
 
-            <Button variant="contained">Send</Button>
+            <Button
+              className={classes.sendButton}
+              disabled={input.length === 0}
+              onClick={sendMsg}
+              variant="contained"
+            >
+              Send
+            </Button>
           </Box>
         </Box>
       </Box>

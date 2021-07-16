@@ -1,0 +1,22 @@
+.arrow-right {
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+
+  border-left: 9px solid white;
+  position: absolute;
+  bottom: -9px;
+  left: 0;
+}
+.arrow-left {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+
+  border-right: 10px solid #c06c48;
+  position: absolute;
+  bottom: -9px;
+  right: 0;
+}

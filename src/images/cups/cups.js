@@ -1,5 +1,5 @@
 const affogato = require("./affogato.png");
-console.log(affogato);
+
 const black = require("./black.png");
 const cafe = require("./cafe.png");
 const cap = require("./cap.png");
@@ -8,6 +8,17 @@ const espresso = require("./espresso.png");
 const latte = require("./latte.png");
 const mocha = require("./mocha.png");
 const rist = require("./rist.png");
+export const cupObj = {
+  affogato,
+  black,
+  cafe,
+  cap,
+  decaf,
+  espresso,
+  latte,
+  mocha,
+  rist,
+};
 export const cups = [
   affogato,
   black,

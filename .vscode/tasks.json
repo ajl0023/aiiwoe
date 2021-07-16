@@ -3,7 +3,7 @@
     "tasks": [
         {
             "label": "new react folder and files",
-            "command": "cd src/components && mkdir ${input:dirName} && touch ${input:dirName}/${input:dirName}.jsx && touch ${input:dirName}/${input:dirName}.module.scss && exit 0",
+            "command": "cd src/components && mkdir ${input:dirName} && echo 'test' > ${input:dirName}/${input:dirName}.jsx && touch ${input:dirName}/${input:dirName}.module.scss && exit 0",
             "type": "shell",
             "problemMatcher": [],
             "presentation": {

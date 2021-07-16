@@ -1,3 +1,3 @@
 git add .
-git commit -m "changed regex for safari compatibility"
+git commit -m "implemented ably and client side updates"
 git push origin master

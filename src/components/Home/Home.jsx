@@ -8,6 +8,7 @@ import {
 import logo from "../../images/logo.png";
 import { Box, Button, Container, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 const useStyles = makeStyles((theme) => ({
   buttonMain: {
     "& > *": {
@@ -34,8 +35,16 @@ const useStyles = makeStyles((theme) => ({
   description: {
     fontSize: "2em",
   },
+  logo: {
+    maxWidth: "70%",
+    width: "400px",
+    height: "auto",
+  },
 }));
-const Home = () => {
+const Home = (props) => {
+  useEffect(() => {
+    props.clearUser();
+  }, []);
   const classes = useStyles();
   return (
     <Container className={classes.contentContainer}>
@@ -48,22 +57,28 @@ const Home = () => {
         flexDirection="column"
         color="white"
       >
-        <img src={logo} alt="" />
-        <p className={classes.description}>
+        <img className={classes.logo} src={logo} alt="" />
+        <Typography align="center" className={classes.descriTypographytion}>
           Experience the complicated side of love, together.
-        </p>
+        </Typography>
         <Box textTransform="uppercase" className={classes.buttonContainer}>
           <Typography className={classes.buttonHeader} align="center">
             Match me with a:
           </Typography>
           <Box className={classes.buttonMain}>
-            <Link to="/chat" className={classes.link}>
-              <Button fullWidth variant="contained">
+            <Link to="/chat/group" className={classes.link}>
+              <Button
+                onClick={() => {
+                  props.setChatType("group");
+                }}
+                fullWidth
+                variant="contained"
+              >
                 Group
               </Button>
             </Link>
 
-            <Link to="/chat" className={classes.link}>
+            <Link to="/chat/individual" className={classes.link}>
               <Button fullWidth variant="contained">
                 Individual
               </Button>

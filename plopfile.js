@@ -1,4 +1,7 @@
-import { Box, Container } from "@material-ui/core";
+module.exports = function (plop) {
+  // controller generator
+
+  const template = `import { Box, Container } from "@material-ui/core";
 import React, { useState } from "react";
 import {
   makeStyles,
@@ -20,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     background: "red",
   },
 }));
-const Chat = () => {
+const {{name}} = () => {
   const [currentUser, setCurrentUser] = useState();
   useEffect(() => {
     getSocket.emit("join", "test");
@@ -54,4 +57,23 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default {{name}};
+`;
+  plop.setGenerator("controller", {
+    description: "application controller logic",
+    prompts: [
+      {
+        type: "input",
+        name: "name",
+        message: "controller name please",
+      },
+    ],
+    actions: [
+      {
+        type: "add",
+        path: "src/components/Group/{{name}}/{{name}}.js",
+        template: template,
+      },
+    ],
+  });
+};
