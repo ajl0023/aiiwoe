@@ -88,30 +88,32 @@ const ChatTable = (props) => {
   }, [props.users]);
 
   return (
-    <Box
-      display={matches ? "flex" : "none"}
-      justifyContent="center"
-      alignItems="center"
-    >
+    <Box paddingRight="40px">
       <Box
-        ref={containerRef}
-        display="flex"
+        display={matches ? "flex" : "none"}
         justifyContent="center"
-        className={classes.chatTable}
+        alignItems="center"
       >
-        {circleArr.map((ele) => {
-          return (
-            <img
-              key={ele.name}
-              className={`${style["circle"]}`}
-              src={ele.src}
-              style={{
-                ...ele.style,
-              }}
-              alt=""
-            />
-          );
-        })}
+        <Box
+          ref={containerRef}
+          display="flex"
+          justifyContent="center"
+          className={classes.chatTable}
+        >
+          {circleArr.map((ele) => {
+            return (
+              <img
+                key={ele.name}
+                className={`${style["circle"]}`}
+                src={ele.src}
+                style={{
+                  ...ele.style,
+                }}
+                alt=""
+              />
+            );
+          })}
+        </Box>
       </Box>
     </Box>
   );
