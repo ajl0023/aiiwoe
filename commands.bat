@@ -1,3 +1,3 @@
 git add .
-git commit -m "server rendering"
+git commit -m "added vercel"
 git push origin master
