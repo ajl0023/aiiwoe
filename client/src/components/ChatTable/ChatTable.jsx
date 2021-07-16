@@ -61,7 +61,7 @@ const ChatTable = (props) => {
       for (var i = 0; i < props.users.length; i++) {
         var circle = { style: {} };
         circle.src = cupObj[props.users[i].data].default;
-
+        circle.name = props.users[i].data;
         circleArray.push(circle);
         circleArray[i].posx = Math.round(radius * Math.cos(theta[i])) + "px";
         circleArray[i].posy = Math.round(radius * Math.sin(theta[i])) + "px";
@@ -102,6 +102,7 @@ const ChatTable = (props) => {
         {circleArr.map((ele) => {
           return (
             <img
+              key={ele.name}
               className={`${style["circle"]}`}
               src={ele.src}
               style={{

@@ -46,21 +46,25 @@ const CupSelect = (props) => {
                 return obj;
               }, {});
               setTaken(userObj);
-
-              console.log(
-                "There are now " +
-                  members.length +
-                  " clients present on this channel"
-              );
             });
           });
         });
     }
     getToken();
+    return () => {
+      generateId().unsubscribe();
+      setTaken(null);
+    };
   }, []);
 
   return (
-    <Box maxWidth="600px" width="100%" display="flex" justifyContent="center">
+    <Box
+      maxWidth="600px"
+      width="100%"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
       <Box width="100%">
         <Box
           bgcolor="black"
@@ -69,10 +73,18 @@ const CupSelect = (props) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography className={classes.containerHeader}>
+          <Typography
+            variant="caption"
+            noWrap
+            className={classes.containerHeader}
+          >
             Select an avatar
           </Typography>
-          <Typography className={classes.containerHeader}>
+          <Typography
+            variant="caption"
+            noWrap
+            className={classes.containerHeader}
+          >
             Users in Room : {taken ? Object.keys(taken).length : 0}
           </Typography>
         </Box>
@@ -88,6 +100,7 @@ const CupSelect = (props) => {
             if (taken && taken[cup.name]) {
               return (
                 <img
+                  key={cup.name}
                   style={{
                     opacity: "60%",
                     pointer: "none",
@@ -101,6 +114,7 @@ const CupSelect = (props) => {
 
             return (
               <img
+                key={cup.name}
                 onClick={() => props.selectUser(cup)}
                 className={classes.cupImage}
                 src={cup.default}

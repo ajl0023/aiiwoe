@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core/styles";
 
 import { useEffect } from "react";
-import { cupObj } from "../../../images/cups/cups";
+import { cupObj } from "../../images/cups/cups";
 
 const useStyles = makeStyles((theme) => ({
   cup: {
@@ -33,10 +33,10 @@ const UserBar = (props) => {
     setCurrentUser(user);
   };
   return (
-    <Box display={matches ? "none" : "flex"} gridGap="15px">
+    <Box width="100%" display={matches ? "none" : "flex"} gridGap="15px">
       {props.users.map((user) => {
         return (
-          <>
+          <React.Fragment key={user.data}>
             <img
               className={classes.cup}
               src={cupObj[user.data].default}
@@ -47,7 +47,7 @@ const UserBar = (props) => {
               src={cupObj[user.data].default}
               alt=""
             />
-          </>
+          </React.Fragment>
         );
       })}
     </Box>

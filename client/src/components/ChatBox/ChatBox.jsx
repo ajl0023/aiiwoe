@@ -18,7 +18,7 @@ import styles from "./ChatBox.module.scss";
 const useStyles = makeStyles((theme) => ({
   chatBox: {
     background: "rgba(255, 255, 255, 0.5)",
-    height: "500px",
+    height: "100%",
   },
   cup: {
     width: "40px",
@@ -60,7 +60,6 @@ const ChatBox = (props) => {
     // });
 
     channel.subscribe(function (msg) {
-      console.log(msg);
       setMessages((prev) => {
         const copy = [...prev];
         copy.push(msg);
@@ -70,98 +69,89 @@ const ChatBox = (props) => {
   }, []);
 
   return (
-    <div>
+    <Box
+      height="100%"
+      display="flex"
+      flexDirection="column"
+      width="500px"
+      alignItems={matches ? "space-between" : "center"}
+    >
       <Box
+        className={classes.chatBox}
+        width="100%"
+        position="relative"
         height="100%"
-        display="flex"
-        justifyContent={matches ? "space-between" : "center"}
       >
-        <Box
-          className={classes.chatBox}
-          width="500px"
-          position="relative"
-          height="100%"
-        >
-          <Box
-            height="100%"
-            padding="5px 15px"
-            overflow="auto"
-            className={classes.messageContainer}
-          >
-            {messages.map((msg, i) => {
-              return (
-                <Box
-                  key={i}
-                  gridGap="5px"
-                  alignItems="center"
-                  display="flex"
-                  flexDirection={
-                    msg.clientId === clientId ? "row" : "row-reverse"
-                  }
-                  justifyContent="start"
-                  className={
-                    msg.clientId === clientId
-                      ? classes.messageOut
-                      : classes.messageIn
-                  }
-                  padding="5px 15px"
-                >
-                  <img
-                    className={classes.cup}
-                    src={cupObj[msg.data.name].default}
-                    alt=""
-                  />
-                  <Box
-                    position="relative"
-                    padding="5px 15px"
-                    bgcolor={msg.clientId === clientId ? "white" : "#c06c48"}
-                  >
-                    <li>{msg.data.text}</li>
-                    <div
-                      className={
-                        styles[
-                          msg.clientId === clientId
-                            ? "arrow-right"
-                            : "arrow-left"
-                        ]
-                      }
-                    ></div>
-                  </Box>
-                </Box>
-              );
-            })}
-          </Box>
-          <Box display="flex" justifyContent="space-between" width="100%">
-            <FormControl variant="filled" fullWidth>
-              <InputLabel
-                style={{ paddingLeft: "20px" }}
-                htmlFor="outlined-adornment-amount"
+        <Box height="100%" overflow="auto" className={classes.messageContainer}>
+          {messages.map((msg, i) => {
+            return (
+              <Box
+                key={i}
+                gridGap="5px"
+                alignItems="center"
+                display="flex"
+                flexDirection={
+                  msg.clientId === clientId ? "row" : "row-reverse"
+                }
+                justifyContent="start"
+                className={
+                  msg.clientId === clientId
+                    ? classes.messageOut
+                    : classes.messageIn
+                }
+                padding="5px 15px"
               >
-                Type Here...
-              </InputLabel>
-              <TextField
-                className={classes.mainInput}
-                value={input}
-                variant="filled"
-                onChange={handleMsg}
-                labelWidth={60}
-                id="outlined-adornment-amount"
-                labelWidth={90}
-              />
-            </FormControl>
-
-            <Button
-              className={classes.sendButton}
-              disabled={input.length === 0}
-              onClick={sendMsg}
-              variant="contained"
-            >
-              Send
-            </Button>
-          </Box>
+                <img
+                  className={classes.cup}
+                  src={cupObj[msg.data.name].default}
+                  alt=""
+                />
+                <Box
+                  position="relative"
+                  padding="5px 15px"
+                  bgcolor={msg.clientId === clientId ? "white" : "#c06c48"}
+                >
+                  <li>{msg.data.text}</li>
+                  <div
+                    className={
+                      styles[
+                        msg.clientId === clientId ? "arrow-right" : "arrow-left"
+                      ]
+                    }
+                  ></div>
+                </Box>
+              </Box>
+            );
+          })}
         </Box>
       </Box>
-    </div>
+      <Box display="flex" justifyContent="space-between" width="100%">
+        <FormControl variant="filled" fullWidth>
+          <InputLabel
+            style={{ paddingLeft: "20px" }}
+            htmlFor="outlined-adornment-amount"
+          >
+            Type Here...
+          </InputLabel>
+          <TextField
+            className={classes.mainInput}
+            value={input}
+            variant="filled"
+            onChange={handleMsg}
+            id="outlined-adornment-amount"
+          />
+        </FormControl>
+
+        <Button
+          className={classes.sendButton}
+          disabled={input.length === 0}
+          onClick={sendMsg}
+          variant="contained"
+        >
+          Send
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

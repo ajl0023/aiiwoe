@@ -58,10 +58,10 @@ const Home = (props) => {
         color="white"
       >
         <img className={classes.logo} src={logo} alt="" />
-        <Typography align="center" className={classes.descriTypographytion}>
+        <Typography align="center" className={classes.description}>
           Experience the complicated side of love, together.
         </Typography>
-        <Box textTransform="uppercase" className={classes.buttonContainer}>
+        <Box className={classes.buttonContainer}>
           <Typography className={classes.buttonHeader} align="center">
             Match me with a:
           </Typography>

@@ -12,7 +12,7 @@ import ChatTable from "../ChatTable/ChatTable";
 import CupSelect from "../CupSelect/CupSelect";
 import { useEffect } from "react";
 import { generateId } from "../../ably.js";
-import UserBar from "./UserBar/UserBar";
+import UserBar from "../UserBar/UserBar";
 const useStyles = makeStyles((theme) => ({
   chatTable: {
     borderRadius: "50%",
@@ -26,10 +26,12 @@ const Group = (props) => {
   const [room, setRoom] = useState();
   useEffect(() => {
     generateId().presence.enter(props.currentUser.name);
-  }, []);
+  }, [props.currentUser.name]);
   useEffect(() => {
+    props.setChatType("group");
     const channel = generateId();
     channel.presence.subscribe((msg) => {
+      console.log(msg);
       channel.presence.get((err, members) => {
         const usersCopy = [...users];
 
@@ -44,18 +46,31 @@ const Group = (props) => {
     <>
       <Box
         width="100%"
-        height="100%"
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         padding="30px 15px"
       >
-        <Grid spacing={2} container alignItems="center">
-          <Grid alignItems="center" xs={12} sm={6} item>
+        <Grid
+          style={{ height: "100%" }}
+          spacing={2}
+          container
+          alignItems="center"
+        >
+          <Grid xs={12} sm={6} item>
             <ChatTable clientId={props.clientId} users={users}></ChatTable>
+
             <UserBar users={users}></UserBar>
           </Grid>
-          <Grid xs={12} sm={6} item>
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="center"
+            style={{ height: "80%" }}
+            xs={12}
+            sm={6}
+            item
+          >
             <ChatBox
               clientId={props.clientId}
               currentUser={props.currentUser}

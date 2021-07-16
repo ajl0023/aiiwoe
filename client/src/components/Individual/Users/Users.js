@@ -16,9 +16,8 @@ const useStyles = makeStyles((theme) => ({
 const Users = (props) => {
   useEffect(() => {}, []);
   const classes = useStyles();
-  console.log(props.users);
   return (
-    <Box height="100%" width="40%">
+    <Box height="100%" width="100%">
       <Box
         display="flex"
         flexDirection="column"
@@ -28,6 +27,7 @@ const Users = (props) => {
         {props.users.map((user, i) => {
           return (
             <Box
+              key={user.data}
               color="white"
               padding="5px 15px"
               display="flex"

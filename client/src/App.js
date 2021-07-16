@@ -63,74 +63,95 @@ const App = () => {
   return (
     <>
       <Router>
-        <Navbar></Navbar>
-        <Box
-          paddingTop="50.86px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          maxWidth="100vw"
-          overflow="hidden"
-          className={classes.container}
-        >
+        <ThemeProvider theme={theme}>
+          <Navbar></Navbar>
           <Box
-            position="fixed"
-            width="100vw"
-            height="100vh"
-            className={classes.backDrop}
-          ></Box>
-          <Box
-            justifyContent="center"
+            paddingTop="50.86px"
             display="flex"
-            zIndex="2"
-            maxWidth="1200px"
-            width="100%"
+            alignItems="center"
+            justifyContent="center"
+            maxWidth="100vw"
+            overflow="hidden"
+            className={classes.container}
           >
-            <ThemeProvider theme={theme}>
+            <Box
+              position="fixed"
+              width="100vw"
+              height="100vh"
+              className={classes.backDrop}
+            ></Box>
+            <Box
+              justifyContent="center"
+              display="flex"
+              zIndex="2"
+              maxWidth="1200px"
+              width="100%"
+              height="100%"
+            >
               <CssBaseline />
+
               <Switch>
-                <Route exact path="/">
-                  <Home
-                    clearUser={clearUser}
-                    setChatType={setChatTypeFunc}
-                  ></Home>
+                <Route
+                  exact
+                  path="/"
+                  render={() => (
+                    <Home
+                      clearUser={clearUser}
+                      setChatType={setChatTypeFunc}
+                    ></Home>
+                  )}
+                ></Route>
+
+                <Route path="/chat/group">
+                  {currentUser ? (
+                    <Group
+                      setChatType={setChatType}
+                      clientId={clientId}
+                      currentUser={currentUser}
+                    ></Group>
+                  ) : (
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      padding="20px"
+                      width="100%"
+                    >
+                      <CupSelect
+                        getClientId={getClientId}
+                        currChannel={currChannel}
+                        chatType={chatType}
+                        selectUser={selectUser}
+                      ></CupSelect>
+                    </Box>
+                  )}
                 </Route>
-                {currentUser ? (
-                  <>
-                    <Route path="/chat/group">
-                      <Group
-                        setChatType={setChatType}
-                        clientId={clientId}
-                        currentUser={currentUser}
-                      ></Group>
-                    </Route>
-                    <Route path="/chat/individual">
-                      <Individual
-                        setChatType={setChatType}
-                        clientId={clientId}
-                        currentUser={currentUser}
-                      ></Individual>
-                    </Route>
-                  </>
-                ) : (
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    padding="20px"
-                    width="100%"
-                  >
-                    <CupSelect
-                      getClientId={getClientId}
-                      currChannel={currChannel}
-                      chatType={chatType}
-                      selectUser={selectUser}
-                    ></CupSelect>
-                  </Box>
-                )}
+                <Route path="/chat/individual">
+                  {currentUser ? (
+                    <Individual
+                      setChatType={setChatType}
+                      clientId={clientId}
+                      currentUser={currentUser}
+                    ></Individual>
+                  ) : (
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      padding="20px"
+                      width="100%"
+                    >
+                      <CupSelect
+                        getClientId={getClientId}
+                        currChannel={currChannel}
+                        chatType={chatType}
+                        selectUser={selectUser}
+                      ></CupSelect>
+                    </Box>
+                  )}
+                </Route>
               </Switch>
-            </ThemeProvider>
+            </Box>
           </Box>
-        </Box>
+        </ThemeProvider>
       </Router>
     </>
   );
