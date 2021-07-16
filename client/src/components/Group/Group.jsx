@@ -31,7 +31,6 @@ const Group = (props) => {
     props.setChatType("group");
     const channel = generateId();
     channel.presence.subscribe((msg) => {
-      console.log(msg);
       channel.presence.get((err, members) => {
         const usersCopy = [...users];
 

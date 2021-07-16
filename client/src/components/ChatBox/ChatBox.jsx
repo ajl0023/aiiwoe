@@ -3,16 +3,13 @@ import {
   Button,
   FormControl,
   InputLabel,
-  OutlinedInput,
   TextField,
   useMediaQuery,
 } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import React, { useEffect, useState } from "react";
-import { useMemo } from "react";
-import { generateId, clientId } from "../../ably";
+import React, { useEffect, useMemo, useState } from "react";
+import { clientId, generateId } from "../../ably";
 import { cupObj } from "../../images/cups/cups";
-import { getSocket } from "../../socketInstance";
 import styles from "./ChatBox.module.scss";
 
 const useStyles = makeStyles((theme) => ({
@@ -134,6 +131,11 @@ const ChatBox = (props) => {
             Type Here...
           </InputLabel>
           <TextField
+            onKeyUp={(e) => {
+              if (e.code === "Enter") {
+                sendMsg(e);
+              }
+            }}
             className={classes.mainInput}
             value={input}
             variant="filled"
