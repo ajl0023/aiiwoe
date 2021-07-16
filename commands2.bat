@@ -1,3 +1,3 @@
 git add .
-git commit -m "added package.json to root"
+git commit -m "added dependecies"
 git push origin master
