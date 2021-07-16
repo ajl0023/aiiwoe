@@ -48,7 +48,7 @@ const checkChannelGroup = (id) => {
     });
   }
   for (let currid in channelsGroup) {
-    if (channelsGroup[currid] < 2) {
+    if (channelsGroup[currid] < 8) {
       return currid;
     }
   }
