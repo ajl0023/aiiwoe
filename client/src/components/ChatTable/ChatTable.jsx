@@ -55,7 +55,7 @@ const ChatTable = (props) => {
           )
         : 0;
       circleRef.current = [];
-      var radius = containerRef.current.offsetWidth / 2;
+      var radius = containerRef.current.offsetWidth / 2 + 20;
 
       let circleArray = circleRef.current;
       for (var i = 0; i < props.users.length; i++) {
