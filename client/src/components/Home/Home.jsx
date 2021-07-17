@@ -1,14 +1,9 @@
-import React from "react";
-import {
-  makeStyles,
-  ThemeProvider,
-  withStyles,
-} from "@material-ui/core/styles";
-
-import logo from "../../images/logo.png";
 import { Box, Button, Container, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import logo from "../../images/logo.png";
+
 const useStyles = makeStyles((theme) => ({
   buttonMain: {
     "& > *": {

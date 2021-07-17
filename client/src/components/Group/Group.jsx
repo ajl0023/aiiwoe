@@ -1,18 +1,11 @@
-import { Box, Container, Grid, Hidden } from "@material-ui/core";
-import React, { useState } from "react";
-import {
-  makeStyles,
-  ThemeProvider,
-  withStyles,
-} from "@material-ui/core/styles";
-import { getSocket } from "../../socketInstance";
-
+import { Box, Grid, useMediaQuery } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import React, { useEffect, useMemo, useState } from "react";
+import { generateId } from "../../ably.js";
 import ChatBox from "../ChatBox/ChatBox";
 import ChatTable from "../ChatTable/ChatTable";
-import CupSelect from "../CupSelect/CupSelect";
-import { useEffect } from "react";
-import { generateId } from "../../ably.js";
 import UserBar from "../UserBar/UserBar";
+
 const useStyles = makeStyles((theme) => ({
   chatTable: {
     borderRadius: "50%",
@@ -24,12 +17,31 @@ const useStyles = makeStyles((theme) => ({
 const Group = (props) => {
   const [users, setUsers] = useState([]);
   const [room, setRoom] = useState();
+  const [typingUsers, setTypingUsers] = useState({});
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
   useEffect(() => {
     generateId().presence.enter(props.currentUser.name);
   }, [props.currentUser.name]);
+  useEffect(() => {}, []);
   useEffect(() => {
     props.setChatType("group");
     const channel = generateId();
+    const copy = {};
+    let timeout;
+    channel.subscribe((data) => {
+      if (data.name === "typing") {
+        setTypingUsers((prev) => {
+          copy[data.data] = true;
+          return copy;
+        });
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          setTypingUsers({});
+        }, 1200);
+      }
+    });
+
     channel.presence.subscribe((msg) => {
       channel.presence.get((err, members) => {
         const usersCopy = [...users];
@@ -55,20 +67,20 @@ const Group = (props) => {
       >
         <Grid
           style={{ height: "100%" }}
-          spacing={2}
+          spacing={1}
           container
           alignItems="center"
         >
           <Grid xs={12} sm={6} item>
             <ChatTable clientId={props.clientId} users={users}></ChatTable>
 
-            <UserBar users={users}></UserBar>
+            <UserBar typingUsers={typingUsers} users={users}></UserBar>
           </Grid>
           <Grid
             container
-            alignItems="center"
+            alignItems={matches ? "center" : "flex-start"}
             justifyContent="center"
-            style={{ height: "80%" }}
+            style={{ height: "100%" }}
             xs={12}
             sm={6}
             item

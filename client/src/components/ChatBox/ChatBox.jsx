@@ -23,7 +23,9 @@ const useStyles = makeStyles((theme) => ({
     objectFit: "contain",
   },
   mainInput: {
+    display: "flex",
     backgroundColor: "rgba(255, 255, 255, 0.5)",
+    "& .MuiInputBase-root": {},
   },
   sendButton: {
     "&.MuiButton-contained.Mui-disabled": {
@@ -44,6 +46,7 @@ const ChatBox = (props) => {
 
   const classes = useStyles();
   const handleMsg = (e) => {
+    channel.publish("typing", clientId);
     setInput(e.target.value);
   };
   const sendMsg = () => {
@@ -56,18 +59,20 @@ const ChatBox = (props) => {
     //
     // });
 
-    channel.subscribe(function (msg) {
-      setMessages((prev) => {
-        const copy = [...prev];
-        copy.push(msg);
-        return copy;
-      });
+    channel.subscribe(function (data) {
+      if (data.name === "message sent") {
+        setMessages((prev) => {
+          const copy = [...prev];
+          copy.push(data);
+          return copy;
+        });
+      }
     });
   }, []);
 
   return (
     <Box
-      height="100%"
+      height="90%"
       display="flex"
       flexDirection="column"
       width="500px"

@@ -1,15 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Box, Container, useMediaQuery } from "@material-ui/core";
-
-import {
-  makeStyles,
-  ThemeProvider,
-  useTheme,
-  withStyles,
-} from "@material-ui/core/styles";
-import style from "./ChatTable.module.scss";
+import { Box, useMediaQuery } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { cupObj } from "../../images/cups/cups";
-import { useMemo } from "react";
+import style from "./ChatTable.module.scss";
 
 const useStyles = makeStyles((theme) => ({
   chatTable: {

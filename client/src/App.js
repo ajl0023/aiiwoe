@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import Home from "./components/Home/Home";
-import Group from "./components/Group/Group";
-import Individual from "./components/Individual/Individual";
-import "./App.css";
+import { Box, CssBaseline } from "@material-ui/core";
 import {
   createTheme,
+  makeStyles,
   responsiveFontSizes,
   ThemeProvider,
-  makeStyles,
 } from "@material-ui/core/styles";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import { Box, CssBaseline } from "@material-ui/core";
-import background from "./images/background.png";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import "./App.css";
 import CupSelect from "./components/CupSelect/CupSelect";
+import Group from "./components/Group/Group";
+import Home from "./components/Home/Home";
+import Individual from "./components/Individual/Individual";
 import Navbar from "./components/Navbar/Navbar";
+import background from "./images/background.png";
 
 const useStyles = makeStyles((theme) => ({
   container: {

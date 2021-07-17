@@ -1,10 +1,9 @@
-import { Box, Typography, makeStyles } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import affogato from "../../images/cups/affogato.png";
-import { cups } from "../../images/cups/cups";
-import { generateId } from "../../ably.js";
+import { Box, makeStyles, Typography } from "@material-ui/core";
 import axios from "axios";
-import { useLocation, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { generateId } from "../../ably.js";
+import { cups } from "../../images/cups/cups";
 const useStyles = makeStyles((theme) => ({
   chatTable: {
     borderRadius: "50%",

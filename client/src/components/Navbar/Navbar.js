@@ -1,18 +1,8 @@
-import { Box, Container } from "@material-ui/core";
-import React, { useState } from "react";
-import {
-  makeStyles,
-  ThemeProvider,
-  withStyles,
-} from "@material-ui/core/styles";
-import { getSocket } from "../../socketInstance";
-
-import ChatBox from "../ChatBox/ChatBox";
-import ChatTable from "../ChatTable/ChatTable";
-import CupSelect from "../CupSelect/CupSelect";
-import { useEffect } from "react";
+import { Box } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import React from "react";
+import { useHistory, withRouter } from "react-router-dom";
 import logo from "./images/logo.png";
-import { Link, useHistory, withRouter } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   logo: {

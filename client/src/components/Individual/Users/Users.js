@@ -1,12 +1,7 @@
-import { Box, Container, Typography } from "@material-ui/core";
-import React, { useState } from "react";
-import {
-  makeStyles,
-  ThemeProvider,
-  withStyles,
-} from "@material-ui/core/styles";
+import { Box, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import React, { useEffect } from "react";
 import { cupObj } from "../../../images/cups/cups";
-import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   cup: {
