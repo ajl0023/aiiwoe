@@ -57,7 +57,7 @@ const Individual = (props) => {
           container
           alignItems={matches ? "center" : "flex-start"}
           justifyContent="center"
-          style={{ height: matches ? "80%" : "80%" }}
+          style={{ height: matches ? "80%" : "100%" }}
           item
           xs={12}
           sm={8}

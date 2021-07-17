@@ -1,9 +1,10 @@
-import { Box, CssBaseline } from "@material-ui/core";
+import { Box, CssBaseline, useMediaQuery } from "@material-ui/core";
 import {
   createTheme,
   makeStyles,
   responsiveFontSizes,
   ThemeProvider,
+  useTheme,
 } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -72,6 +73,8 @@ export function useSubscribe(props) {
 }
 
 const App = () => {
+  const resize = useTheme();
+  const matches = useMediaQuery(resize.breakpoints.up("sm"));
   const [currentUser, setCurrentUser] = useState();
   const [chatType, setChatType] = useState();
   const [clientId, setClientId] = useState();
@@ -105,7 +108,7 @@ const App = () => {
           <Box
             paddingTop="50.86px"
             display="flex"
-            alignItems="center"
+            alignItems={matches ? "center" : "flex-start"}
             justifyContent="center"
             maxWidth="100vw"
             overflow="hidden"
@@ -123,7 +126,7 @@ const App = () => {
               zIndex="2"
               maxWidth="1200px"
               width="100%"
-              height="100%"
+              height="80%"
             >
               <CssBaseline />
 
