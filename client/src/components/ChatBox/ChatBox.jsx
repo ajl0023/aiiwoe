@@ -72,7 +72,7 @@ const ChatBox = (props) => {
 
   return (
     <Box
-      height="90%"
+      height="100%"
       display="flex"
       flexDirection="column"
       width="500px"

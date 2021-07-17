@@ -14,7 +14,7 @@ import Home from "./components/Home/Home";
 import Individual from "./components/Individual/Individual";
 import Navbar from "./components/Navbar/Navbar";
 import background from "./images/background.png";
-
+import { generateId } from "./ably";
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundImage: `url(${background})`,
@@ -34,6 +34,43 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgba(0,0,0,0.4)",
   },
 }));
+export function useSubscribe(props) {
+  const [typingUsers, setTypingUsers] = useState({});
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    props.setChatType("group");
+    const channel = generateId();
+    const copy = {};
+    let timeout;
+    channel.subscribe((data) => {
+      if (data.name === "typing") {
+        setTypingUsers((prev) => {
+          copy[data.data] = true;
+          return copy;
+        });
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          setTypingUsers({});
+        }, 1200);
+      }
+    });
+
+    channel.presence.subscribe((msg) => {
+      channel.presence.get((err, members) => {
+        const usersCopy = [...users];
+
+        usersCopy.push(...members);
+        setUsers(usersCopy);
+      });
+    });
+    return () => {
+      channel.detach();
+    };
+  }, []);
+  return { users, typingUsers };
+}
+
 const App = () => {
   const [currentUser, setCurrentUser] = useState();
   const [chatType, setChatType] = useState();
@@ -128,6 +165,7 @@ const App = () => {
                 <Route path="/chat/individual">
                   {currentUser ? (
                     <Individual
+                      useSubscribe={useSubscribe}
                       setChatType={setChatType}
                       clientId={clientId}
                       currentUser={currentUser}

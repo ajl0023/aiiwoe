@@ -3,6 +3,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { cupObj } from "../../images/cups/cups";
 import style from "./ChatTable.module.scss";
+import { clientId } from "../../ably";
 
 const useStyles = makeStyles((theme) => ({
   chatTable: {
@@ -15,6 +16,25 @@ const useStyles = makeStyles((theme) => ({
       content: "''",
       display: "block",
       paddingBottom: "100%",
+    },
+  },
+  typingBubble: {
+    width: "25px",
+    height: "10px",
+    position: "absolute",
+    right: "-4px",
+    top: "-5px",
+    background: "white",
+    borderRadius: "14px",
+
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "2px",
+    "& > *": {
+      background: "black",
+      borderRadius: "50%",
+      width: "4px",
+      height: "4px",
     },
   },
 }));
@@ -55,6 +75,7 @@ const ChatTable = (props) => {
         var circle = { style: {} };
         circle.src = cupObj[props.users[i].data].default;
         circle.name = props.users[i].data;
+        circle.clientId = props.users[i].clientId;
         circleArray.push(circle);
         circleArray[i].posx = Math.round(radius * Math.cos(theta[i])) + "px";
         circleArray[i].posy = Math.round(radius * Math.sin(theta[i])) + "px";
@@ -95,15 +116,29 @@ const ChatTable = (props) => {
         >
           {circleArr.map((ele) => {
             return (
-              <img
-                key={ele.name}
-                className={`${style["circle"]}`}
-                src={ele.src}
-                style={{
-                  ...ele.style,
-                }}
-                alt=""
-              />
+              <Box>
+                <Box
+                  display={
+                    props.typingUsers[ele.clientId] && ele.clientId !== clientId
+                      ? "flex"
+                      : "none"
+                  }
+                  className={classes.typingBubble}
+                >
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </Box>
+                <img
+                  key={ele.name}
+                  className={`${style["circle"]}`}
+                  src={ele.src}
+                  style={{
+                    ...ele.style,
+                  }}
+                  alt=""
+                />
+              </Box>
             );
           })}
         </Box>

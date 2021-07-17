@@ -12,13 +12,14 @@ const Users = (props) => {
   useEffect(() => {}, []);
   const classes = useStyles();
   return (
-    <Box height="100%" width="100%">
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="flex-start"
-        bgcolor="rgba(255, 255, 255, 0.5)"
-      >
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="flex-start"
+      height="100%"
+      width="100%"
+    >
+      <Box bgcolor="rgba(255, 255, 255, 0.5)">
         {props.users.map((user, i) => {
           return (
             <Box

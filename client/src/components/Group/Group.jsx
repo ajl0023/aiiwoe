@@ -5,7 +5,7 @@ import { generateId } from "../../ably.js";
 import ChatBox from "../ChatBox/ChatBox";
 import ChatTable from "../ChatTable/ChatTable";
 import UserBar from "../UserBar/UserBar";
-
+import { useSubscribe } from "../../App.js";
 const useStyles = makeStyles((theme) => ({
   chatTable: {
     borderRadius: "50%",
@@ -15,45 +15,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Group = (props) => {
-  const [users, setUsers] = useState([]);
+  const { users, typingUsers } = useSubscribe(props);
   const [room, setRoom] = useState();
-  const [typingUsers, setTypingUsers] = useState({});
+
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
   useEffect(() => {
     generateId().presence.enter(props.currentUser.name);
   }, [props.currentUser.name]);
   useEffect(() => {}, []);
-  useEffect(() => {
-    props.setChatType("group");
-    const channel = generateId();
-    const copy = {};
-    let timeout;
-    channel.subscribe((data) => {
-      if (data.name === "typing") {
-        setTypingUsers((prev) => {
-          copy[data.data] = true;
-          return copy;
-        });
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-          setTypingUsers({});
-        }, 1200);
-      }
-    });
 
-    channel.presence.subscribe((msg) => {
-      channel.presence.get((err, members) => {
-        const usersCopy = [...users];
-
-        usersCopy.push(...members);
-        setUsers(usersCopy);
-      });
-    });
-    return () => {
-      channel.detach();
-    };
-  }, []);
   const classes = useStyles();
 
   return (
@@ -72,7 +43,11 @@ const Group = (props) => {
           alignItems="center"
         >
           <Grid xs={12} sm={6} item>
-            <ChatTable clientId={props.clientId} users={users}></ChatTable>
+            <ChatTable
+              typingUsers={typingUsers}
+              clientId={props.clientId}
+              users={users}
+            ></ChatTable>
 
             <UserBar typingUsers={typingUsers} users={users}></UserBar>
           </Grid>
@@ -80,7 +55,7 @@ const Group = (props) => {
             container
             alignItems={matches ? "center" : "flex-start"}
             justifyContent="center"
-            style={{ height: "100%" }}
+            style={{ height: matches ? "80%" : "80%" }}
             xs={12}
             sm={6}
             item
