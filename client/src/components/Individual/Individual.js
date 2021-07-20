@@ -1,28 +1,20 @@
 import { Box, Grid, Hidden, useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import React, { useEffect, useMemo, useState } from "react";
-import { generateId } from "../../ably.js";
-import { useSubscribe } from "../../App.js";
+import React, { useEffect } from "react";
+import { getSocket } from "../../socketInstance";
 import ChatBox from "../ChatBox/ChatBox";
+import { useSubscribe, useTypingUsers } from "../CustomHooks/CustomHooks";
 import UserBar from "../UserBar/UserBar";
 import Users from "./Users/Users";
-const useStyles = makeStyles((theme) => ({
-  chatTable: {
-    borderRadius: "50%",
-    width: "200px",
-    height: "200px",
-    background: "red",
-  },
-}));
+
+const useStyles = makeStyles((theme) => ({}));
 const Individual = (props) => {
-  const { users, typingUsers } = useSubscribe(props);
-  const [currentUser, setCurrentUser] = useState();
+  const { users, room } = useSubscribe(props, "individual");
+  const { typing } = useTypingUsers(props);
+
   const theme = useTheme();
   const classes = useStyles();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
-  useEffect(() => {
-    generateId().presence.enter(props.currentUser.name);
-  }, [props.currentUser.name]);
 
   return (
     <>
@@ -47,11 +39,11 @@ const Individual = (props) => {
         >
           <Hidden xsDown>
             <Box display="flex" width="100%">
-              <Users typingUsers={typingUsers} users={users}></Users>
+              <Users typingUsers={typing} users={users}></Users>
             </Box>
           </Hidden>
 
-          <UserBar typingUsers={typingUsers} users={users}></UserBar>
+          <UserBar typingUsers={typing} users={users}></UserBar>
         </Grid>
         <Grid
           container
@@ -62,10 +54,7 @@ const Individual = (props) => {
           xs={12}
           sm={8}
         >
-          <ChatBox
-            clientId={props.clientId}
-            currentUser={props.currentUser}
-          ></ChatBox>
+          <ChatBox room={room} currentUser={props.currentUser}></ChatBox>
         </Grid>
       </Grid>
     </>

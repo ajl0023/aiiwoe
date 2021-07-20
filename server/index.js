@@ -3,99 +3,75 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const server = require("http").createServer(app);
-server.listen(process.env.PORT || 5000);
-var Ably = require("ably");
-app.use(express.static(path.join(__dirname, "../client/build")));
 
-const { group } = require("console");
+server.listen(process.env.PORT || 5000);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+app.use(express.static(path.join(__dirname, "../client/build")));
 
 app.use(express.json());
 
-let db;
-
-// function createChannel() {
-//   var ably = new Ably.Realtime({
-//     key: "8ZlqBg.IDAVaA:2m8tkZT0rhHi58Mv",
-//     clientId: Math.random().toString(),
-//   });
-//   let roomid = id;
-//   channel.attach(function (err) {
-//     if (err) {
-//       return console.error("Error attaching to the channel");
-//     }
-//     console.log("We are now attached to the channel");
-//   });
-// }
-var ably = new Ably.Realtime({
-  key: "8ZlqBg.IDAVaA:2m8tkZT0rhHi58Mv",
-  clientId: "server",
-});
-
-let id = Math.random().toString();
-const channelsGroup = {};
-const channelsInd = {};
-const checkChannelGroup = (id) => {
-  for (let currId in channelsGroup) {
-    var channel = ably.channels.get(currId);
-
-    channel.attach(function (err) {
-      if (err) {
-        return console.error("Error attaching to the channel");
-      }
-    });
-    channel.presence.get(function (err, members) {
-      channelsGroup[currId] = members.length;
-    });
-  }
-  for (let currid in channelsGroup) {
-    if (channelsGroup[currid] < 8) {
-      return currid;
-    }
-  }
-  id = Math.random().toString();
-  channelsGroup[id] = 0;
-  return id;
-};
-function checkChannelInd() {
-  for (let currId in channelsInd) {
-    var channel = ably.channels.get(currId);
-
-    channel.attach(function (err) {
-      if (err) {
-        return console.error("Error attaching to the channel");
-      }
-    });
-    channel.presence.get(function (err, members) {
-      channelsInd[currId] = members.length;
-    });
-  }
-  for (let currid in channelsInd) {
-    if (channelsInd[currid] < 2) {
-      return currid;
-    }
-  }
-  id = Math.random().toString();
-  channelsInd[id] = 0;
-  return id;
-}
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
-app.post("/token", (req, res) => {
-  let token;
-  console.log(req.body.type);
-  if (req.body.type === "group") {
-    token = checkChannelGroup(id);
-  } else {
-    token = checkChannelInd();
-  }
+const {
+  getOpenRoom,
+  joinRoom,
+  users,
+  individualSelect,
+  indRoomData,
+  groupSelect,
+  roomData,
+  getUsers,
+} = require("./users");
 
-  res.json({ token: token });
-});
-app.post("/token/new", (req, res) => {
-  id = Math.random().toString();
-  channels[id] = 0;
-  res.json({ token: id });
+io.on("connection", (socket) => {
+  socket.on("getUsers", (chatType, cb) => {
+    socket.join(chatType);
+    const { key, length } = getOpenRoom(io, chatType);
+
+    let usersInRoom = io.sockets.adapter.rooms.get(key);
+
+    usersArr = getUsers(usersInRoom);
+    cb(usersInRoom ? usersArr : []);
+  });
+  socket.on("join", (currentUser, chatType, cb) => {
+    joinRoom(io, currentUser, chatType, cb, socket);
+  });
+  socket.on("leave", (room, chatType) => {
+    const roomToSearch = chatType === "group" ? roomData : indRoomData;
+
+    socket.leave(room);
+    roomToSearch[room] = io.sockets.adapter.rooms.get(room) || [];
+    let usersInRoom = io.sockets.adapter.rooms.get(room);
+    usersArr = getUsers(usersInRoom);
+
+    socket.to(room).emit("leave", usersArr);
+    socket.to(chatType).emit("leaveSelect", usersArr);
+  });
+  socket.on("disconnect", () => {
+    const user = users.get(socket.id);
+    if (user) {
+      socket.leave(user.room);
+      let usersInRoom = io.sockets.adapter.rooms.get(user.room);
+      usersArr = getUsers(usersInRoom);
+      socket.to(user.room).emit("leave", usersArr);
+      socket.to(user.type).emit("leaveSelect", usersArr);
+    }
+  });
+  socket.on("sendMsg", (data) => {
+    io.to(data.room).emit("sendMsg", data);
+  });
+  socket.on("typing", (room, user) => {
+    socket.to(room).emit("typing", user);
+  });
+  socket.on("finished typing", (room) => {
+    socket.to(room).emit("finished typing", socket.id);
+  });
 });
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));

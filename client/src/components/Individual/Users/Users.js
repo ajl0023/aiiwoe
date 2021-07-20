@@ -7,10 +7,15 @@ const useStyles = makeStyles((theme) => ({
   cup: {
     width: "60px",
   },
+  typingBubble: {
+    ...theme.typingBubble,
+  },
 }));
 const Users = (props) => {
   useEffect(() => {}, []);
   const classes = useStyles();
+  console.log(classes);
+  console.log(props.users);
   return (
     <Box
       display="flex"
@@ -23,7 +28,7 @@ const Users = (props) => {
         {props.users.map((user, i) => {
           return (
             <Box
-              key={user.data}
+              key={user.id}
               color="white"
               padding="5px 15px"
               display="flex"
@@ -34,12 +39,23 @@ const Users = (props) => {
                 i !== props.users.length - 1 ? "1px solid black" : ""
               }
             >
-              <img
-                className={classes.cup}
-                src={cupObj[user.data].default}
-                alt=""
-              />
-              <Typography>{user.data}</Typography>
+              <Box position="relative" key={user.id}>
+                <Box
+                  display={props.typingUsers[user.id] ? "flex" : "none"}
+                  className={classes.typingBubble}
+                >
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </Box>
+                <img
+                  key={user.name}
+                  className={classes.cup}
+                  src={cupObj[user.name].default}
+                  alt=""
+                />
+              </Box>
+              <Typography>{user.name}</Typography>
             </Box>
           );
         })}

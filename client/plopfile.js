@@ -71,7 +71,7 @@ export default {{name}};
     actions: [
       {
         type: "add",
-        path: "src/components/Group/{{name}}/{{name}}.js",
+        path: "src/components/{{name}}/{{name}}.js",
         template: template,
       },
     ],

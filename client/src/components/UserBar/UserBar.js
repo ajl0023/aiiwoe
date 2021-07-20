@@ -2,7 +2,8 @@ import { Box, useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { cupObj } from "../../images/cups/cups";
-import { clientId } from "../../ably";
+import { generateId, clientId } from "../../ably";
+import { getSocket } from "../../socketInstance";
 const useStyles = makeStyles((theme) => ({
   cup: {
     flexShrink: "0.5",
@@ -14,23 +15,7 @@ const useStyles = makeStyles((theme) => ({
     background: "red",
   },
   typingBubble: {
-    width: "25px",
-    height: "10px",
-    position: "absolute",
-    right: "-4px",
-    top: "-5px",
-    background: "white",
-    borderRadius: "14px",
-
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "2px",
-    "& > *": {
-      background: "black",
-      borderRadius: "50%",
-      width: "4px",
-      height: "4px",
-    },
+    ...theme.typingBubble,
   },
 }));
 const UserBar = (props) => {
@@ -43,6 +28,7 @@ const UserBar = (props) => {
   const selectUser = (user) => {
     setCurrentUser(user);
   };
+
   return (
     <Box width="100%" display={matches ? "none" : "flex"} gridGap="15px">
       {props.users.map((user) => {
@@ -56,7 +42,7 @@ const UserBar = (props) => {
             >
               <Box
                 display={
-                  props.typingUsers[user.clientId] && user.clientId !== clientId
+                  props.typingUsers[user.id] && user.id !== getSocket.id
                     ? "flex"
                     : "none"
                 }
@@ -68,7 +54,7 @@ const UserBar = (props) => {
               </Box>
               <img
                 className={classes.cup}
-                src={cupObj[user.data].default}
+                src={cupObj[user.name].default}
                 alt=""
               />
             </Box>

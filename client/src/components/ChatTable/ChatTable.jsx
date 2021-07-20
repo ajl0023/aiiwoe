@@ -3,7 +3,8 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { cupObj } from "../../images/cups/cups";
 import style from "./ChatTable.module.scss";
-import { clientId } from "../../ably";
+import { generateId, clientId } from "../../ably";
+import { getSocket } from "../../socketInstance";
 
 const useStyles = makeStyles((theme) => ({
   chatTable: {
@@ -19,23 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   typingBubble: {
-    width: "25px",
-    height: "10px",
-    position: "absolute",
-    right: "-4px",
-    top: "-5px",
-    background: "white",
-    borderRadius: "14px",
-
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "2px",
-    "& > *": {
-      background: "black",
-      borderRadius: "50%",
-      width: "4px",
-      height: "4px",
-    },
+    ...theme.typingBubble,
   },
 }));
 
@@ -58,7 +43,7 @@ const ChatTable = (props) => {
   const containerRef = useRef();
 
   const classes = useStyles();
-  const cupPos = useMemo(() => {});
+
   const circleRef = useRef([]);
   function resize() {
     setCircleArr(() => {
@@ -68,14 +53,14 @@ const ChatTable = (props) => {
           )
         : 0;
       circleRef.current = [];
-      var radius = containerRef.current.offsetWidth / 2 + 20;
+      var radius = containerRef.current.offsetWidth / 2 + 40;
 
       let circleArray = circleRef.current;
       for (var i = 0; i < props.users.length; i++) {
         var circle = { style: {} };
-        circle.src = cupObj[props.users[i].data].default;
-        circle.name = props.users[i].data;
-        circle.clientId = props.users[i].clientId;
+        circle.src = cupObj[props.users[i].name].default;
+        circle.name = props.users[i].name;
+        circle.id = props.users[i].id;
         circleArray.push(circle);
         circleArray[i].posx = Math.round(radius * Math.cos(theta[i])) + "px";
         circleArray[i].posy = Math.round(radius * Math.sin(theta[i])) + "px";
@@ -83,7 +68,7 @@ const ChatTable = (props) => {
         circleArray[i].style.top =
           mainHeight / 2 -
           parseInt(circleArray[i].posy.slice(0, -2)) -
-          40 +
+          20 +
           "px";
         circleArray[i].style.left =
           mainHeight / 2 +
@@ -102,7 +87,7 @@ const ChatTable = (props) => {
   }, [props.users]);
 
   return (
-    <Box paddingRight="40px">
+    <Box paddingRight="60px">
       <Box
         display={matches ? "flex" : "none"}
         justifyContent="center"
@@ -116,13 +101,14 @@ const ChatTable = (props) => {
         >
           {circleArr.map((ele) => {
             return (
-              <Box>
+              <Box
+                key={ele.id}
+                style={{
+                  ...ele.style,
+                }}
+              >
                 <Box
-                  display={
-                    props.typingUsers[ele.clientId] && ele.clientId !== clientId
-                      ? "flex"
-                      : "none"
-                  }
+                  display={props.typingUsers[ele.id] ? "flex" : "none"}
                   className={classes.typingBubble}
                 >
                   <div></div>
@@ -133,9 +119,6 @@ const ChatTable = (props) => {
                   key={ele.name}
                   className={`${style["circle"]}`}
                   src={ele.src}
-                  style={{
-                    ...ele.style,
-                  }}
                   alt=""
                 />
               </Box>

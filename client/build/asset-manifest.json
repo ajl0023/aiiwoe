@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/static/css/main.695f62a8.chunk.css",
-    "main.js": "/static/js/main.2cd77493.chunk.js",
-    "main.js.map": "/static/js/main.2cd77493.chunk.js.map",
+    "main.js": "/static/js/main.efd0afe1.chunk.js",
+    "main.js.map": "/static/js/main.efd0afe1.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.bade6642.js",
     "runtime-main.js.map": "/static/js/runtime-main.bade6642.js.map",
-    "static/js/2.d66b4481.chunk.js": "/static/js/2.d66b4481.chunk.js",
-    "static/js/2.d66b4481.chunk.js.map": "/static/js/2.d66b4481.chunk.js.map",
+    "static/js/2.794f6759.chunk.js": "/static/js/2.794f6759.chunk.js",
+    "static/js/2.794f6759.chunk.js.map": "/static/js/2.794f6759.chunk.js.map",
     "index.html": "/index.html",
     "static/css/main.695f62a8.chunk.css.map": "/static/css/main.695f62a8.chunk.css.map",
-    "static/js/2.d66b4481.chunk.js.LICENSE.txt": "/static/js/2.d66b4481.chunk.js.LICENSE.txt",
+    "static/js/2.794f6759.chunk.js.LICENSE.txt": "/static/js/2.794f6759.chunk.js.LICENSE.txt",
     "static/media/affogato.png": "/static/media/affogato.398ec518.png",
     "static/media/background.23f7c3b9.png": "/static/media/background.23f7c3b9.png",
     "static/media/black.png": "/static/media/black.ec640ce9.png",
@@ -25,8 +25,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.bade6642.js",
-    "static/js/2.d66b4481.chunk.js",
+    "static/js/2.794f6759.chunk.js",
     "static/css/main.695f62a8.chunk.css",
-    "static/js/main.2cd77493.chunk.js"
+    "static/js/main.efd0afe1.chunk.js"
   ]
 }

@@ -1,11 +1,11 @@
 import { Box, Grid, useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import React, { useEffect, useMemo, useState } from "react";
-import { generateId } from "../../ably.js";
+import React, { useEffect, useState } from "react";
+import { getSocket } from "../../socketInstance";
 import ChatBox from "../ChatBox/ChatBox";
 import ChatTable from "../ChatTable/ChatTable";
 import UserBar from "../UserBar/UserBar";
-import { useSubscribe } from "../../App.js";
+import { useSubscribe, useTypingUsers } from "../CustomHooks/CustomHooks";
 const useStyles = makeStyles((theme) => ({
   chatTable: {
     borderRadius: "50%",
@@ -15,18 +15,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Group = (props) => {
-  const { users, typingUsers } = useSubscribe(props);
-  const [room, setRoom] = useState();
-
+  const { users, room } = useSubscribe(props, "group");
+  const { typing } = useTypingUsers(props);
   const theme = useTheme();
+
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
-  useEffect(() => {
-    generateId().presence.enter(props.currentUser.name);
-  }, [props.currentUser.name]);
-  useEffect(() => {}, []);
 
   const classes = useStyles();
-
   return (
     <>
       <Box
@@ -44,12 +39,12 @@ const Group = (props) => {
         >
           <Grid xs={12} sm={6} item>
             <ChatTable
-              typingUsers={typingUsers}
+              typingUsers={typing}
               clientId={props.clientId}
               users={users}
             ></ChatTable>
 
-            <UserBar typingUsers={typingUsers} users={users}></UserBar>
+            <UserBar typingUsers={typing} users={users}></UserBar>
           </Grid>
           <Grid
             container
@@ -61,6 +56,7 @@ const Group = (props) => {
             item
           >
             <ChatBox
+              room={room}
               clientId={props.clientId}
               currentUser={props.currentUser}
             ></ChatBox>

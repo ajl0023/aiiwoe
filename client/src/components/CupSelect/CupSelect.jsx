@@ -2,8 +2,11 @@ import { Box, makeStyles, Typography } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { generateId } from "../../ably.js";
+import { ablyRest, getRoom } from "../../ablyConfig";
+import { useChannelUsers, useSubscribe } from "../../App";
+import { getSocket } from "../../socketInstance";
 import { cups } from "../../images/cups/cups";
+
 const useStyles = makeStyles((theme) => ({
   chatTable: {
     borderRadius: "50%",
@@ -19,40 +22,54 @@ const useStyles = makeStyles((theme) => ({
     width: "40px",
   },
 }));
+let test = [];
 
 const CupSelect = (props) => {
+  let max;
   const location = useLocation();
 
   const classes = useStyles();
   const [taken, setTaken] = useState();
-
+  const [newRoom, setNewRoom] = useState();
   useEffect(() => {
-    const chatType = location.pathname.split("/")[2];
+    const loc = location.pathname.split("/")[2];
+    console.log(max);
+    getSocket.emit("getUsers", loc, (roomData) => {
+      const userObj = roomData.reduce((obj, user) => {
+        obj[user.name] = user;
+        return obj;
+      }, {});
 
-    function getToken(token) {
-      axios
-        .post("/token", {
-          token,
-          type: chatType,
-        })
-        .then((data) => {
-          generateId(data.data.token).presence.subscribe(function (
-            presenceMsg
-          ) {
-            generateId(data.data.token).presence.get(function (err, members) {
-              const userObj = members.reduce((obj, user) => {
-                obj[user.data] = user;
-                return obj;
-              }, {});
-              setTaken(userObj);
-            });
-          });
-        });
-    }
-    getToken();
+      setTaken(userObj);
+    });
+  }, [newRoom]);
+  useEffect(() => {
+    getSocket.on("selectUsers", (roomData, key, i) => {
+      if (roomData.length >= 2) {
+        console.log(500);
+        console.log(key);
+        setNewRoom(key);
+      }
+      const userObj = roomData.reduce((obj, user) => {
+        obj[user.name] = user;
+        return obj;
+      }, {});
+
+      setTaken(userObj);
+    });
+    getSocket.on("leaveSelect", (roomData) => {
+      console.log(roomData);
+      const userObj = roomData.reduce((obj, user) => {
+        obj[user.name] = user;
+        return obj;
+      }, {});
+      setTaken(userObj);
+    });
+
     return () => {
-      generateId().unsubscribe();
-      setTaken(null);
+      getSocket.off("selectUsers");
+      getSocket.off("join");
+      getSocket.off("leave");
     };
   }, []);
 

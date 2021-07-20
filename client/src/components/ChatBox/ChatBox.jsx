@@ -7,9 +7,9 @@ import {
   useMediaQuery,
 } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import React, { useEffect, useMemo, useState } from "react";
-import { clientId, generateId } from "../../ably";
+import React, { useEffect, useState } from "react";
 import { cupObj } from "../../images/cups/cups";
+import { getSocket } from "../../socketInstance";
 import styles from "./ChatBox.module.scss";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,40 +33,44 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
+let typing = true;
+let timeout;
 const ChatBox = (props) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const channel = useMemo(() => {
-    return generateId();
-  });
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
 
   const classes = useStyles();
   const handleMsg = (e) => {
-    channel.publish("typing", clientId);
+    if (typing) {
+      getSocket.emit("typing", props.room, getSocket.id);
+    }
+    typing = false;
+
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      typing = true;
+      getSocket.emit("finished typing", props.room);
+    }, 1000);
     setInput(e.target.value);
   };
   const sendMsg = () => {
-    channel.publish("message sent", { text: input, ...props.currentUser });
-
+    getSocket.emit("sendMsg", {
+      text: input,
+      room: props.room,
+      socketid: getSocket.id,
+      currentUser: props.currentUser,
+    });
     setInput("");
   };
-  useEffect(() => {
-    // getSocket.on("sendMessage", (msg) => {
-    //
-    // });
 
-    channel.subscribe(function (data) {
-      if (data.name === "message sent") {
-        setMessages((prev) => {
-          const copy = [...prev];
-          copy.push(data);
-          return copy;
-        });
-      }
+  useEffect(() => {
+    getSocket.on("sendMsg", (msg) => {
+      setMessages((prev) => {
+        return [...prev, msg];
+      });
     });
   }, []);
 
@@ -93,11 +97,11 @@ const ChatBox = (props) => {
                 alignItems="center"
                 display="flex"
                 flexDirection={
-                  msg.clientId === clientId ? "row" : "row-reverse"
+                  msg.socketid === getSocket.id ? "row" : "row-reverse"
                 }
                 justifyContent="start"
                 className={
-                  msg.clientId === clientId
+                  msg.socketid === getSocket.id
                     ? classes.messageOut
                     : classes.messageIn
                 }
@@ -105,19 +109,21 @@ const ChatBox = (props) => {
               >
                 <img
                   className={classes.cup}
-                  src={cupObj[msg.data.name].default}
+                  src={cupObj[msg.currentUser.name].default}
                   alt=""
                 />
                 <Box
                   position="relative"
                   padding="5px 15px"
-                  bgcolor={msg.clientId === clientId ? "white" : "#c06c48"}
+                  bgcolor={msg.socketid === getSocket.id ? "white" : "#c06c48"}
                 >
-                  <li>{msg.data.text}</li>
+                  <li>{msg.text}</li>
                   <div
                     className={
                       styles[
-                        msg.clientId === clientId ? "arrow-right" : "arrow-left"
+                        msg.socketid === getSocket.id
+                          ? "arrow-right"
+                          : "arrow-left"
                       ]
                     }
                   ></div>

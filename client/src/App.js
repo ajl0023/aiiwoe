@@ -15,7 +15,8 @@ import Home from "./components/Home/Home";
 import Individual from "./components/Individual/Individual";
 import Navbar from "./components/Navbar/Navbar";
 import background from "./images/background.png";
-import { generateId } from "./ably";
+import { ably, generateId } from "./ably";
+import { getAllChannels, getRoom } from "./ablyConfig";
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundImage: `url(${background})`,
@@ -35,50 +36,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgba(0,0,0,0.4)",
   },
 }));
-export function useSubscribe(props) {
-  const [typingUsers, setTypingUsers] = useState({});
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    props.setChatType("group");
-    const channel = generateId();
-    const copy = {};
-    let timeout;
-    channel.subscribe((data) => {
-      if (data.name === "typing") {
-        setTypingUsers((prev) => {
-          copy[data.data] = true;
-          return copy;
-        });
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-          setTypingUsers({});
-        }, 1200);
-      }
-    });
-
-    channel.presence.subscribe((msg) => {
-      channel.presence.get((err, members) => {
-        const usersCopy = [...users];
-
-        usersCopy.push(...members);
-        setUsers(usersCopy);
-      });
-    });
-    return () => {
-      channel.detach();
-    };
-  }, []);
-  return { users, typingUsers };
-}
 
 const App = () => {
   const resize = useTheme();
   const matches = useMediaQuery(resize.breakpoints.up("sm"));
   const [currentUser, setCurrentUser] = useState();
   const [chatType, setChatType] = useState();
-  const [clientId, setClientId] = useState();
-  const [currChannel, setCurrChannel] = useState([]);
+
   const selectUser = (user) => {
     // setCurrChannel(channel);
     setCurrentUser(user);
@@ -89,13 +53,30 @@ const App = () => {
   const setChatTypeFunc = (type) => {
     setChatType(type);
   };
-  const getClientId = (id) => {
-    setClientId(id);
-  };
+
   const classes = useStyles();
   let theme = createTheme({
     typography: {
       fontFamily: ["Montserrat", "sans-serif"].join(","),
+    },
+    typingBubble: {
+      width: "25px",
+      height: "10px",
+      position: "absolute",
+      right: "-4px",
+      top: "-5px",
+      background: "white",
+      borderRadius: "14px",
+
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "2px",
+      "& > *": {
+        background: "black",
+        borderRadius: "50%",
+        width: "4px",
+        height: "4px",
+      },
     },
   });
   theme = responsiveFontSizes(theme);
@@ -146,7 +127,6 @@ const App = () => {
                   {currentUser ? (
                     <Group
                       setChatType={setChatType}
-                      clientId={clientId}
                       currentUser={currentUser}
                     ></Group>
                   ) : (
@@ -157,8 +137,6 @@ const App = () => {
                       width="100%"
                     >
                       <CupSelect
-                        getClientId={getClientId}
-                        currChannel={currChannel}
                         chatType={chatType}
                         selectUser={selectUser}
                       ></CupSelect>
@@ -168,9 +146,7 @@ const App = () => {
                 <Route path="/chat/individual">
                   {currentUser ? (
                     <Individual
-                      useSubscribe={useSubscribe}
                       setChatType={setChatType}
-                      clientId={clientId}
                       currentUser={currentUser}
                     ></Individual>
                   ) : (
@@ -181,8 +157,6 @@ const App = () => {
                       width="100%"
                     >
                       <CupSelect
-                        getClientId={getClientId}
-                        currChannel={currChannel}
                         chatType={chatType}
                         selectUser={selectUser}
                       ></CupSelect>
