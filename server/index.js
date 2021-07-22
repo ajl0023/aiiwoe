@@ -11,9 +11,6 @@ const {
   createRooms,
   roomData,
   indRoomData,
-  groupSelect,
-  testFunc,
-  individualSelect,
   users,
 } = userFunctions;
 
@@ -38,7 +35,7 @@ const createServer = () => {
   io.on("connection", (socket) => {
     socket.on("getUsers", (chatType, cb) => {
       socket.join(chatType);
-      const { key, length } = getOpenRoom(io, chatType);
+      const { key } = getOpenRoom(io, chatType);
 
       let usersInRoom = io.sockets.adapter.rooms.get(key);
 

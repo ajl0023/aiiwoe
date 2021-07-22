@@ -1,8 +1,4 @@
 const io = require("socket.io-client");
-let socket;
-let connected;
-const userFunc = require("../users");
-const functions = new userFunc();
 const { createServer, userFunctions } = require("../index");
 const socketUrl = "http://localhost:5000";
 // jest.mock("../users");
@@ -10,7 +6,6 @@ const socketUrl = "http://localhost:5000";
 describe("socket", () => {
   let server;
   let sockets;
-  const arr = [];
   beforeEach((done) => {
     for (let i in userFunctions.indRoomData) {
       userFunctions.indRoomData[i] = new Set();
@@ -46,7 +41,6 @@ describe("socket", () => {
   };
   test("should correctly handle when user joins and leaves individual Rooms", (done) => {
     const socket = makeSocket();
-    let currRoom;
     socket.emit("join", { name: "affogato" }, "individual", (room) => {
       const indrooms = userFunctions.indRoomData;
       const grouprooms = userFunctions.roomData;
@@ -75,7 +69,7 @@ describe("socket", () => {
     async function joinUsers() {
       await Promise.all(
         sockets.map((socket, id) => {
-          return new Promise((resolve, reject) => {
+          return new Promise((resolve) => {
             socket.emit("join", { name: users[id] }, "individual", () => {
               resolve();
             });
@@ -115,7 +109,7 @@ describe("socket", () => {
     async function joinUsers() {
       await Promise.all(
         sockets.map((socket, id) => {
-          return new Promise((resolve, reject) => {
+          return new Promise((resolve) => {
             socket.emit("join", { name: users[id] }, "group", () => {
               resolve();
             });
@@ -139,7 +133,7 @@ describe("socket", () => {
     });
   });
   const joinPromise = (socket, type) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       socket.emit("join", { name: "affogato" }, type, (data) => {
         resolve(data);
       });
@@ -183,7 +177,7 @@ describe("socket", () => {
     await joinPromise(socket2, "individual");
     socket1.emit("sendMsg", { room });
 
-    const msgProm = new Promise((resolve, reject) => {
+    const msgProm = new Promise((resolve) => {
       socket2.on("sendMsg", (data) => {
         resolve(data);
       });
