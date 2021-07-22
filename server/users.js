@@ -33,6 +33,7 @@ module.exports = class UserUtils {
   };
   joinRoom = (io, currentUser, chatType, cb, socket) => {
     const { key, length } = this.getOpenRoom(io, chatType);
+
     const roomToInsert =
       chatType === "group" ? this.roomData : this.indRoomData;
     const user = {
@@ -52,9 +53,9 @@ module.exports = class UserUtils {
       userTemp.push(this.users.get(user));
     }
 
-    io.to(key).emit("join", userTemp);
+    io.to(key).emit("join", userTemp, key);
 
-    io.to(chatType).emit("selectUsers", userTemp);
+    io.to(chatType).emit("selectUsers", userTemp, key);
   };
   getUsers = (usersInRoom) => {
     let usersArr = [];

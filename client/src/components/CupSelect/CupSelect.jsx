@@ -28,8 +28,9 @@ const CupSelect = (props) => {
   const classes = useStyles();
   const [taken, setTaken] = useState();
   const [newRoom, setNewRoom] = useState();
+  const loc = location.pathname.split("/")[2];
   useEffect(() => {
-    const loc = location.pathname.split("/")[2];
+    console.log(123123);
     getSocket.emit("getUsers", loc, (roomData) => {
       const userObj = roomData.reduce((obj, user) => {
         obj[user.name] = user;
@@ -41,7 +42,10 @@ const CupSelect = (props) => {
   }, [newRoom]);
   useEffect(() => {
     getSocket.on("selectUsers", (roomData, key, i) => {
-      if (roomData.length >= 2) {
+      console.log(roomData);
+      if (roomData.length >= 2 && loc === "individual") {
+        setNewRoom(key);
+      } else if (roomData.length >= 8 && loc === "group") {
         setNewRoom(key);
       }
       const userObj = roomData.reduce((obj, user) => {

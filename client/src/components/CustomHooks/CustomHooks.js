@@ -22,7 +22,7 @@ export const useSubscribe = (props, chatType) => {
   useEffect(() => {
     return () => {
       if (room) {
-        getSocket.emit("leave", room, chatType);
+        getSocket.emit("leave", room, chatType, () => {});
       }
     };
   }, [room]);
