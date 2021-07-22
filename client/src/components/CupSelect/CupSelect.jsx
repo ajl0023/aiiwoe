@@ -1,11 +1,8 @@
 import { Box, makeStyles, Typography } from "@material-ui/core";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { ablyRest, getRoom } from "../../ablyConfig";
-import { useChannelUsers, useSubscribe } from "../../App";
-import { getSocket } from "../../socketInstance";
 import { cups } from "../../images/cups/cups";
+import { getSocket } from "../../socketInstance";
 
 const useStyles = makeStyles((theme) => ({
   chatTable: {
@@ -33,7 +30,6 @@ const CupSelect = (props) => {
   const [newRoom, setNewRoom] = useState();
   useEffect(() => {
     const loc = location.pathname.split("/")[2];
-    console.log(max);
     getSocket.emit("getUsers", loc, (roomData) => {
       const userObj = roomData.reduce((obj, user) => {
         obj[user.name] = user;
@@ -46,8 +42,6 @@ const CupSelect = (props) => {
   useEffect(() => {
     getSocket.on("selectUsers", (roomData, key, i) => {
       if (roomData.length >= 2) {
-        console.log(500);
-        console.log(key);
         setNewRoom(key);
       }
       const userObj = roomData.reduce((obj, user) => {
@@ -58,7 +52,6 @@ const CupSelect = (props) => {
       setTaken(userObj);
     });
     getSocket.on("leaveSelect", (roomData) => {
-      console.log(roomData);
       const userObj = roomData.reduce((obj, user) => {
         obj[user.name] = user;
         return obj;

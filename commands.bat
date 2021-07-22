@@ -1,2 +1,2 @@
 cd client 
-npm run build && cd .. && git add . && git commit -m "reimplemented with socket io, ably wasn't the right tool" && git push origin master
+npm run build && cd .. && git add . && git commit -m "added unit tests for socket.io server" && git push origin master

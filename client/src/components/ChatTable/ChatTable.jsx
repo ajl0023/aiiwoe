@@ -1,10 +1,8 @@
 import { Box, useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { cupObj } from "../../images/cups/cups";
 import style from "./ChatTable.module.scss";
-import { generateId, clientId } from "../../ably";
-import { getSocket } from "../../socketInstance";
 
 const useStyles = makeStyles((theme) => ({
   chatTable: {

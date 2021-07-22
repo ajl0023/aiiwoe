@@ -1,7 +1,6 @@
 import { Box, Grid, Hidden, useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import React, { useEffect } from "react";
-import { getSocket } from "../../socketInstance";
+import React from "react";
 import ChatBox from "../ChatBox/ChatBox";
 import { useSubscribe, useTypingUsers } from "../CustomHooks/CustomHooks";
 import UserBar from "../UserBar/UserBar";

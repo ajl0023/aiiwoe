@@ -15,8 +15,6 @@ import Home from "./components/Home/Home";
 import Individual from "./components/Individual/Individual";
 import Navbar from "./components/Navbar/Navbar";
 import background from "./images/background.png";
-import { ably, generateId } from "./ably";
-import { getAllChannels, getRoom } from "./ablyConfig";
 const useStyles = makeStyles((theme) => ({
   container: {
     backgroundImage: `url(${background})`,

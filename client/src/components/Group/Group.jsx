@@ -1,11 +1,10 @@
 import { Box, Grid, useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import React, { useEffect, useState } from "react";
-import { getSocket } from "../../socketInstance";
+import React from "react";
 import ChatBox from "../ChatBox/ChatBox";
 import ChatTable from "../ChatTable/ChatTable";
-import UserBar from "../UserBar/UserBar";
 import { useSubscribe, useTypingUsers } from "../CustomHooks/CustomHooks";
+import UserBar from "../UserBar/UserBar";
 const useStyles = makeStyles((theme) => ({
   chatTable: {
     borderRadius: "50%",

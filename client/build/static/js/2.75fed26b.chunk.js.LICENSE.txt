@@ -5,18 +5,6 @@ object-assign
 */
 
 /*!
- * @license Copyright 2021, Ably
- * 
- * Ably JavaScript Library v1.2.10
- * https://github.com/ably/ably-js
- * 
- * Ably Realtime Messaging
- * https://www.ably.com
- * 
- * Released under the Apache Licence v2.0
- */
-
-/*!
  * The buffer module from node.js, for the browser.
  *
  * @author   Feross Aboukhadijeh <http://feross.org>

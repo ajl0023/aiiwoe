@@ -2,7 +2,6 @@ import { Box, useMediaQuery } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { cupObj } from "../../images/cups/cups";
-import { generateId, clientId } from "../../ably";
 import { getSocket } from "../../socketInstance";
 const useStyles = makeStyles((theme) => ({
   cup: {

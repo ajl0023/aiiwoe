@@ -14,8 +14,6 @@ const useStyles = makeStyles((theme) => ({
 const Users = (props) => {
   useEffect(() => {}, []);
   const classes = useStyles();
-  console.log(classes);
-  console.log(props.users);
   return (
     <Box
       display="flex"

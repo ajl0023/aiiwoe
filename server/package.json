@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon start.js",
+    "test": "jest --watch --runInBand"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +14,9 @@
     "axios": "^0.21.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jest": "^27.0.6",
     "nodemon": "^2.0.11",
-    "socket.io": "^4.1.2"
+    "socket.io": "^4.1.2",
+    "socket.io-client": "^4.1.3"
   }
 }
