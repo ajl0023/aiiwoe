@@ -7,7 +7,6 @@ sections:
 - type: document
   path: asdf
   label: asdf
-  match: "**/*"
 - type: heading
   label: asdfasdf
 - type: directory
