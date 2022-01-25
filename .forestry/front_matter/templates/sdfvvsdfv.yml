@@ -8,3 +8,5 @@ fields:
     required: false
   label: sdfsdfsdfdf
   description: sdf
+pages:
+- sdfsdf.md
