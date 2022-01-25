@@ -1,4 +1,10 @@
 ---
 label: sdfvvsdfv
 hide_body: true
-fields: []
+fields:
+- name: sdfsdfsdfdfsdf
+  type: text
+  config:
+    required: false
+  label: sdfsdfsdfdf
+  description: sdf
