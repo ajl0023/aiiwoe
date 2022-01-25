@@ -1,4 +1,20 @@
 ---
 label: '8'
 hide_body: true
-fields: []
+fields:
+- name: njmnjmknjmnmnm
+  type: textarea
+  default: ''
+  config:
+    required: false
+    wysiwyg: false
+    schema:
+      format: markdown
+  label: njmnjmknjmnmnm
+  description: nmnmnm
+- name: '7878'
+  type: text
+  config:
+    required: false
+  label: '7878'
+  description: njmnmmnm
